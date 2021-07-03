@@ -608,7 +608,7 @@ def sigProfilerExtractor(input_type,
     
             
         #project_name = project.split("/")[-1]
-        data = datadump.SigProfilerMatrixGeneratorFunc(project_name, refgen, project, exome=exome,  bed_file=None, chrom_based=False, plot=False, gs=False)
+        data = datadump.SigProfilerMatrixGeneratorFunc(project_name, refgen, project, exome=exome, bed_file=None, chrom_based=False, plot=True, seqInfo=True, gs=False)
         
         
         
