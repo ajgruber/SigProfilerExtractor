@@ -8,6 +8,9 @@ The tool identifies the number of operative mutational signatures, their activit
 for each signature to cause a specific mutation type in a cancer sample. The tool makes use of SigProfilerMatrixGenerator
 and SigProfilerPlotting. Detailed documentation can be found at: https://osf.io/t6j7u/wiki/home/
 
+The branch of SigProfilerExtractor has been modified for use with the SigProfiler Nextflow pipeline (SigProfiler.nf) in the Genomics England Research Environment.
+
+
 # Table of contents
 - [Installation](#installation)
 - [Functions](#Functions)
@@ -70,12 +73,19 @@ help(sig.importdata)
 
 Extracts mutational signatures from an array of samples.
 
+This version of SigProfilerExtractor has been modified for use with the SigProfilerExtract Nextflow pipeline within the Genomics England Research Environment. It has been changed so that a separate job is run for each number of signatures and each NMF replicate. For each number of signatures, a final job is submitted to combine all NMF replicates. If between 1 and 20 signatures are being extracted, each with 100 replicates, then 2020 jobs will need to be submitted (20*100=2000 for each NMF replicate and each signature number, and 20 for combining the replicates for each signature number).
+
 ```python
-sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37", opportunity_genome = "GRCh37", context_type = "default", exome = False,
-                         minimum_signatures=1, maximum_signatures=10, nmf_replicates=100, resample = True, batch_size=1, cpu=-1, gpu=False,
-                         nmf_init="random", precision= "single", matrix_normalization= "gmm", seeds= "none",
-                         min_nmf_iterations= 10000, max_nmf_iterations=1000000, nmf_test_conv= 10000, nmf_tolerance= 1e-15,nnls_add_penalty=0.05,
-                         nnls_remove_penalty=0.01, initial_remove_penalty=0.05, de_novo_fit_penalty=0.02,get_all_signature_matrices= False)
+# Parameters to use
+n_signatures=2 # Number of signatures to extract
+nmf_replicates=10 # Number of NMF replicates to complete
+
+# Run NMF replicates
+for replicate in range(nmf_replicates):
+    sigProfilerExtractor(input_type, out_put, input_data, section="nmf", minimum_signatures=n_signatures, maximum_signatures=n_signatures, nmf_replicates=nmf_replicates)
+
+# Combine NMF replicates
+sigProfilerExtractor(input_type, out_put, input_data, section="combine", minimum_signatures=n_signatures, maximum_signatures=n_signatures, nmf_replicates=nmf_replicates)
 ```
 
 | Category | Parameter | Variable Type | Parameter Description |
@@ -89,6 +99,7 @@ sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37",
 |  | **context_type** | String | A string of mutaion context name/names separated by comma (","). The items in the list defines the mutational contexts to be considered to extract the signatures. The default value is "96,DINUC,ID", where "96" is the SBS96 context, "DINUC" is the DINUCLEOTIDE context and ID is INDEL context. |
 |  | **exome** | Boolean | Defines if the exomes will be extracted. The default value is "False".  |
 | **NMF Replicates** |  |  |  |
+|  | **section** | String | Whether to run the NMF or NMF-combination section of SigProfilerExtractor. Options are "nmf" and "combine". |
 |  | **minimum_signatures** | Positive Integer | The minimum number of signatures to be extracted. The default value is 1. |
 |  | **maximum_signatures** | Positive Integer | The maximum number of signatures to be extracted. The default value is 25. |
 |  | **nmf_replicates** | Positive Integer | The number of iteration to be performed to extract each number signature. The default value is 500. |
@@ -96,7 +107,7 @@ sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37",
 |  | **seeds** | String | It can be used to get reproducible resamples for the NMF replicates. A path of a tab separated .txt file containing the replicated id and preset seeds in a two columns dataframe can be passed through this parameter. The Seeds.txt file in the results folder from a previous analysis can be used for the seeds parameter in a new analysis. The Default value for this parameter is "none". When "none", the seeds for resampling will be random for different analysis. |
 | **NMF Engines** |  |  |  |
 |  | **matrix_normalization** | String | Method of normalizing the genome matrix before it is analyzed by NMF. Other options are, "log2", "custom" or "none". Default is value is "gmm". |
-|  | **nmf_init** | String | The initialization algorithm for W and H matrix of NMF. Options are "random", "nndsvd", "nndsvda", "nndsvdar" and "nndsvd_min"'". Default is "random". | 
+|  | **nmf_init** | String | The initialization algorithm for W and H matrix of NMF. Options are "random", "nndsvd", "nndsvda", "nndsvdar" and "nndsvd_min"'". Default is "random". |
 |  | **precision** | String | Values should be single or double. Default is single. |
 |  | **min_nmf_iterations** | Integer | Value defines the minimum number of iterations to be completed before NMF converges. Default is 10000. |
 |  | **max_nmf_iterations** | Integer | Value defines the maximum number of iterations to be completed before NMF converges. Default is 1000000. |
@@ -123,29 +134,6 @@ sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37",
 |  | **get_all_signature_matrices** | Boolean | If True, the Ws and Hs from all the NMF iterations are generated in the output. |
 |  | **export_probabilities** | Boolean | Defualt is True. If False, then doesn't create the probability matrix. |
 
-#### sigProfilerExtractor Example
-```python    
-
-from SigProfilerExtractor import sigpro as sig
-def main_function():
-    # to get input from vcf files
-    path_to_example_folder_containing_vcf_files = sig.importdata("vcf")
-    data = path_to_example_folder_containing_vcf_files # you can put the path to your folder containing the vcf     samples
-    sig.sigProfilerExtractor("vcf", "example_output", data, minimum_signatures=1, maximum_signatures=3)
-if __name__="__main__":
-   main_function()
-
-#Wait untill the excecution is finished. The process may a couple of hours based on the size of the data.
-#Check the current working directory for the "example_output" folder.
-
-def main_function():    
-   # to get input from table format (mutation catalog matrix)
-   path_to_example_table = sig.importdata("matrix")
-   data = path_to_example_table # you can put the path to your tab delimited file containing the mutational catalog matrix/table
-   sig.sigProfilerExtractor("matrix", "example_output", data, opportunity_genome="GRCh38", minimum_signatures=1,            maximum_signatures=3)
-if __name__="__main__":
-   main_function()
-```
 
 #### sigProfilerExtractor Output
 To learn about the output, please visit https://osf.io/t6j7u/wiki/home/
@@ -283,6 +271,3 @@ If CUDA out of memory exceptions occur, it will be necessary to reduce the numbe
 
 ## <a name="copyright"></a> Copyright
 This software and its documentation are copyright 2018 as a part of the sigProfiler project. The SigProfilerExtractor framework is free software and is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-## <a name="contact"></a> Contact Information
-Please address any queries or bug reports to S M Ashiqul Islam (Mishu) at m0islam@ucsd.edu
