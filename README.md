@@ -73,7 +73,7 @@ help(sig.importdata)
 
 Extracts mutational signatures from an array of samples.
 
-This version of SigProfilerExtractor has been modified for use with the SigProfilerExtract Nextflow pipeline within the Genomics England Research Environment. It has been changed so that a separate job is run for each number of signatures and each NMF replicate. For each number of signatures, a final job is submitted to combine all NMF replicates. If between 1 and 20 signatures are being extracted, each with 100 replicates, then 2020 jobs will need to be submitted (20*100=2000 for each NMF replicate and each signature number, and 20 for combining the replicates for each signature number).
+This version of SigProfilerExtractor has been modified for use with the SigProfilerExtract Nextflow pipeline (SigProfiler.nf) within the Genomics England Research Environment. It has been changed so that a separate job is run for each number of signatures and each NMF replicate. For each number of signatures, a job is then submitted to combine all NMF replicates. If between 1 and 20 signatures are being extracted, each with 100 replicates, then 2020 jobs will need to be submitted (20*100=2000 for each NMF replicate and each signature number, and 20 for combining the replicates for each signature number).
 
 ```python
 # Parameters to use
