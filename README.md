@@ -81,8 +81,8 @@ n_signatures=2 # Number of signatures to extract
 nmf_replicates=10 # Number of NMF replicates to complete
 
 # Run NMF replicates
-for replicate in range(nmf_replicates):
-    sigProfilerExtractor(input_type, out_put, input_data, section="nmf", minimum_signatures=n_signatures, maximum_signatures=n_signatures, nmf_replicates=nmf_replicates, nmf_replicate=replicate)
+for nmf_replicate in range(nmf_replicates):
+    sigProfilerExtractor(input_type, out_put, input_data, section="nmf", minimum_signatures=n_signatures, maximum_signatures=n_signatures, nmf_replicates=nmf_replicates, nmf_replicate=nmf_replicate)
 
 # Combine NMF replicates
 sigProfilerExtractor(input_type, out_put, input_data, section="combine", minimum_signatures=n_signatures, maximum_signatures=n_signatures, nmf_replicates=nmf_replicates)
