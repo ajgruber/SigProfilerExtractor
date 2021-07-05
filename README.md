@@ -82,7 +82,7 @@ nmf_replicates=10 # Number of NMF replicates to complete
 
 # Run NMF replicates
 for replicate in range(nmf_replicates):
-    sigProfilerExtractor(input_type, out_put, input_data, section="nmf", minimum_signatures=n_signatures, maximum_signatures=n_signatures, nmf_replicates=nmf_replicates)
+    sigProfilerExtractor(input_type, out_put, input_data, section="nmf", minimum_signatures=n_signatures, maximum_signatures=n_signatures, nmf_replicates=nmf_replicates, nmf_replicate=replicate)
 
 # Combine NMF replicates
 sigProfilerExtractor(input_type, out_put, input_data, section="combine", minimum_signatures=n_signatures, maximum_signatures=n_signatures, nmf_replicates=nmf_replicates)
@@ -103,6 +103,7 @@ sigProfilerExtractor(input_type, out_put, input_data, section="combine", minimum
 |  | **minimum_signatures** | Positive Integer | The minimum number of signatures to be extracted. The default value is 1. |
 |  | **maximum_signatures** | Positive Integer | The maximum number of signatures to be extracted. The default value is 25. |
 |  | **nmf_replicates** | Positive Integer | The number of iteration to be performed to extract each number signature. The default value is 500. |
+|  | **nmf_replicate** | Positive Integer | The NMF replicate to complete. Should be a value between 1 and the total number of iterations to perform, inclusive. Ignored if replicates are being combined (i.e. section equals "combine") |
 |  | **resample** | Boolean | Default is True. If True, add poisson noise to samples by resampling. |
 |  | **seeds** | String | It can be used to get reproducible resamples for the NMF replicates. A path of a tab separated .txt file containing the replicated id and preset seeds in a two columns dataframe can be passed through this parameter. The Seeds.txt file in the results folder from a previous analysis can be used for the seeds parameter in a new analysis. The Default value for this parameter is "none". When "none", the seeds for resampling will be random for different analysis. |
 | **NMF Engines** |  |  |  |

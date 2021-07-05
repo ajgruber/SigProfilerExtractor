@@ -241,7 +241,7 @@ def sigProfilerExtractor(input_type,
 
     nmf_replicates: A positive integer, optional. The number of iterations to be performed. The default value is 500
 
-    nmf_replicate: A positive integer, optional. The NMF replicate to complete. Should be a value between 1 and the total number of iterations to perform, inclusive. [AJC 2021-07-05]
+    nmf_replicate: A positive integer. The NMF replicate to complete. Should be a value between 1 and the total number of iterations to perform, inclusive. Ignored if replicates are being combined (i.e. section equals "combine") [AJC 2021-07-05]
 
     resample: Boolean, optional. Default is True. If True, add poisson noise to samples by resampling.
 
@@ -250,9 +250,9 @@ def sigProfilerExtractor(input_type,
 
     NMF RUNS:-
 
-    matrix_normalization: A string. Method of normalizing the genome matrix before it is analyzed by NMF. Default is "gmm". Other options are "gmm", "100X" or "no_normalization".
+    matrix_normalization: A string. Method of normalizing the genome matrix before it is analyzed by NMF. Other options are "gmm", "100X" or "no_normalization". Default is "gmm".
 
-    nmf_init: A String. The initialization algorithm for W and H matrix of NMF. Options are 'random', 'nndsvd', 'nndsvda', 'nndsvdar' and 'nndsvd_min'. Default is 'random'.
+    nmf_init: A String. The initialization algorithm for W and H matrix of NMF. Options are "random", "nndsvd", "nndsvda", "nndsvdar" and "nndsvd_min". Default is "random".
 
     precision: A string. Values should be single or double. Default is "single".
 
