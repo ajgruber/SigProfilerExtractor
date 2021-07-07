@@ -821,7 +821,6 @@ def sigProfilerExtractor(input_type,
             if (section == "nmf"):
                 results = sub.decipher_signatures_run(excecution_parameters, genomes=genomes, mut_context=m, i=i)
                 dill.dump(results, open(str(nmf_replicate)+".pkl", mode="wb"))
-                continue
             # [AJC 2021-07-05] end added section allowing NMF extractions to be completed separately
 
             # [AJC 2021-07-05] start modified section allowing separate NMF extractions to be combined
@@ -852,7 +851,9 @@ def sigProfilerExtractor(input_type,
                     i = i)
             # [AJC 2021-07-05] end modified section allowing separate NMF extractions to be combined
 
-
+            # [AJC 2021-07-05] added to ensure next section is only run if single replicate completed
+            if (section == "nmf"):
+                continue
 
             #denormalize the genomes and exposures
             #genomes = sub.denormalize_samples(genomes, totalMutations, normalization_value=100000)
@@ -937,6 +938,9 @@ def sigProfilerExtractor(input_type,
                           format(str(datetime.datetime.now()).split(".")[0],mutation_type,processes,str(current_time_end-current_time_start).split(".")[0], current_time_end))
             sysdata.close()
 
+        # [AJC 2021-07-07] added to ensure that the next section is only run if results are being combined
+        if (section == "nmf"):
+            continue
 
         ################################################################################################################
         ########################################## Plot Stabiltity vs Reconstruction Error #############################
