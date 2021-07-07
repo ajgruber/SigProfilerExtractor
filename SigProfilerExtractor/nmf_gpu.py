@@ -155,12 +155,12 @@ class NMF:
         self._prev_loss = self._kl_loss
         return False
 
-    def fit(self, beta=1):
+    def fit(self, beta=2):
         """
         Fit the basis (W) and coefficient (H) matrices to the input matrix (V) using multiplicative updates and
             beta divergence
         Args:
-          beta: value to use for generalised beta divergence. Default is 1 for KL divergence
+          beta: value to use for generalised beta divergence.
             beta == 2 => Euclidean updates
             beta == 1 => Generalised Kullback-Leibler updates
             beta == 0 => Itakura-Saito updates
