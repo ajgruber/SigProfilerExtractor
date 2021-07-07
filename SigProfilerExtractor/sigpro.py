@@ -384,6 +384,7 @@ def sigProfilerExtractor(input_type,
     if (section == "nmf"):
         nmf_replicates = 1
 
+    # [AJC 2021-07-05] added NMF_replicate to record which of the replicates is to be run (used for file naming)
     excecution_parameters= {"input_type":input_type,
                         "output":output,
                         "input_data":input_data,
@@ -395,6 +396,7 @@ def sigProfilerExtractor(input_type,
                         "minimum_signatures":minimum_signatures,
                         "maximum_signatures":maximum_signatures,
                         "NMF_replicates":nmf_replicates,
+                        "NMF_replicate":nmf_replicate,
                         "cpu":cpu,
                         "gpu":gpu,
                         "batch_size":batch_size,
