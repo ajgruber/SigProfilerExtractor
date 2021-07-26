@@ -1077,15 +1077,21 @@ def cluster_converge_innerloop(Wall, Hall, totalprocess, iteration=1, dist="cosi
 
 def parallel_clustering(Wall, Hall, totalProcesses, iterations=50,  n_cpu=-1, dist= "cosine", gpu=False):
 
-    if n_cpu==-1:
-        pool = multiprocessing.Pool()
-    else:
-        pool = multiprocessing.Pool(processes=n_cpu)
+    # [AJC 2021-07-26] not required as using parallel_clustering in parallel with large numbers of samples can cause integer overflow error
+    #if n_cpu==-1:
+    #    pool = multiprocessing.Pool()
+    #else:
+    #    pool = multiprocessing.Pool(processes=n_cpu)
 
     pool_nmf=partial(cluster_converge_innerloop, Wall, Hall, totalProcesses, dist=dist, gpu=gpu)
-    result_list = pool.map(pool_nmf, range(iterations))
-    pool.close()
-    pool.join()
+
+    # [AJC 2021-07-26] not required as using parallel_clustering in parallel with large numbers of samples can cause integer overflow error
+    #result_list = pool.map(pool_nmf, range(iterations))
+    #pool.close()
+    #pool.join()
+
+    result_list = list(map(pool_nmf, range(iterations))) # [AJC 2021-07-26] added as using parallel_clustering in parallel with large numbers of samples can cause integer overflow error
+
     return result_list
 
 # To select the best clustering converge of the cluster_converge_innerloop
