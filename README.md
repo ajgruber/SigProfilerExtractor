@@ -107,9 +107,10 @@ sigProfilerExtractor(input_type, out_put, input_data, section="combine", minimum
 |  | **resample** | Boolean | Default is True. If True, add poisson noise to samples by resampling. |
 |  | **seeds** | String | It can be used to get reproducible resamples for the NMF replicates. A path of a tab separated .txt file containing the replicated id and preset seeds in a two columns dataframe can be passed through this parameter. The Seeds.txt file in the results folder from a previous analysis can be used for the seeds parameter in a new analysis. The Default value for this parameter is "none". When "none", the seeds for resampling will be random for different analysis. |
 | **NMF Engines** |  |  |  |
-|  | **matrix_normalization** | String | Method of normalizing the genome matrix before it is analyzed by NMF. Other options are, "log2", "custom" or "none". Default is value is "gmm". |
 |  | **nmf_init** | String | The initialization algorithm for W and H matrix of NMF. Options are "random", "nndsvd", "nndsvda", "nndsvdar" and "nndsvd_min"'". Default is "random". |
 |  | **precision** | String | Values should be single or double. Default is single. |
+|  | **matrix_normalization** | String | Method of normalizing the genome matrix before it is analyzed by NMF. Other options are, "log2", "custom" or "none". Default is value is "gmm". |
+|  | **beta** | Integer | Value defines whether (0) Itakura-Saito updates, (1) generalised Kullback-Leibler updates, or (2) Euclidean updates are used. Default is 2 (Euclidean updates). |
 |  | **min_nmf_iterations** | Integer | Value defines the minimum number of iterations to be completed before NMF converges. Default is 10000. |
 |  | **max_nmf_iterations** | Integer | Value defines the maximum number of iterations to be completed before NMF converges. Default is 1000000. |
 |  | **nmf_test_conv** | Integer | Value defines the number number of iterations to done between checking next convergence. Default is 10000. |
