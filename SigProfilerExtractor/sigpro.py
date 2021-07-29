@@ -259,7 +259,7 @@ def sigProfilerExtractor(input_type,
 
     matrix_normalization: A string. Method of normalizing the genome matrix before it is analyzed by NMF. Other options are "gmm", "100X" or "no_normalization". Default is "gmm".
 
-    beta: An integer. Value defines whether (0) Itakura-Saito updates, (1) generalised Kullback-Leibler updates, or (2) Euclidean updates are used. Defualt is 2 (Euclidean updates).
+    beta: An integer. Value defines whether (0) Itakura-Saito updates, (1) generalised Kullback-Leibler updates, or (2) Euclidean updates are used. Default is 2 (Euclidean updates).
 
     min_nmf_iterations: An integer. Value defines the minimum number of iterations to be completed before NMF converges. Default is 10000.
 
