@@ -416,8 +416,9 @@ def nnmf_cpu(genomes, nfactors, init="nndsvd", excecution_parameters=None):
     max_iterations=excecution_parameters["max_NMF_iterations"]
     tolerance=excecution_parameters["NMF_tolerance"]
     test_conv=excecution_parameters["NMF_test_conv"]
+    beta=excecution_parameters["beta"] # [AJC 2021-07-29] beta held in excecution_parameters
     net = nmf_cpu.NMF(genomes,rank=nfactors, min_iterations=min_iterations, max_iterations=max_iterations, tolerance=tolerance,test_conv=test_conv, init_method=init,seed=None)
-    net.fit()
+    net.fit(beta=beta) # [AJC 2021-07-29] beta now passed to function
     Ws = []
     Hs = []
 
@@ -449,8 +450,9 @@ def nnmf_gpu(genomes, nfactors, init="nndsvd",excecution_parameters=None):
     max_iterations=excecution_parameters["max_NMF_iterations"]
     tolerance=excecution_parameters["NMF_tolerance"]
     test_conv=excecution_parameters["NMF_test_conv"]
+    beta=excecution_parameters["beta"] # [AJC 2021-07-29] beta held in excecution_parameters
     net = nmf_gpu.NMF(genomes,rank=nfactors,min_iterations=min_iterations,max_iterations=max_iterations, tolerance=tolerance,test_conv=test_conv, gpu_id=gpu_id, init_method=init,seed=None)
-    net.fit()
+    net.fit(beta=beta) # [AJC 2021-07-29] beta now passed to function
     Ws = []
     Hs = []
     for H in net.H.detach().cpu().numpy():

@@ -44,9 +44,9 @@ class NMF:
               fp32 tensors as convergence can happen too early.
         """
         #torch.cuda.set_device(gpu_id)
-        
-        
-            
+
+
+
         if seed is None:
             seed = datetime.now().timestamp()
 
@@ -93,7 +93,7 @@ class NMF:
             for i in range(self._V.shape[0]):
                 vin = np.mat(self._V.cpu().numpy()[i])
                 W[i,:,:], H[i,:,:] = nv.initialize(vin, self._rank, options={'flag': 0})
-                
+
         elif init_method == 'nndsvda':
             W = np.zeros([self._V.shape[0], self._V.shape[1], self._rank])
             H = np.zeros([self._V.shape[0], self._rank, self._V.shape[2]])
@@ -123,7 +123,7 @@ class NMF:
                #H = np.expand_dims(H, axis=0)
                W[i,:,:]=w
                H[i,:,:]=h
-        #W,H=initialize_nm(vin, nfactors, init=init, eps=1e-6,random_state=None)   
+        #W,H=initialize_nm(vin, nfactors, init=init, eps=1e-6,random_state=None)
         W = torch.from_numpy(W).type(self._tensor_type)
         H = torch.from_numpy(H).type(self._tensor_type)
         return W, H
@@ -144,7 +144,7 @@ class NMF:
     def conv(self):
         try:
             return self._conv
-        except: 
+        except:
             return 0
     @property
     def _kl_loss(self):
@@ -168,9 +168,9 @@ class NMF:
             beta divergence
         Args:
           beta: value to use for generalised beta divergence.
-            beta == 2 => Euclidean updates
-            beta == 1 => Generalised Kullback-Leibler updates
             beta == 0 => Itakura-Saito updates
+            beta == 1 => Generalised Kullback-Leibler updates
+            beta == 2 => Euclidean updates
         """
         with torch.no_grad():
             def stop_iterations():
@@ -184,6 +184,7 @@ class NMF:
                 return  [stop, self._iter]
 
             if beta == 2:
+                print ("using Euclidean updates")
                 for self._iter in range(self.max_iterations):
                     self._H = self.H * (self.W.transpose(1, 2) @ self._V) / (self.W.transpose(1, 2) @ (self.W @ self.H))
                     self._W = self.W * (self._V @ self.H.transpose(1, 2)) / (self.W @ (self.H @ self.H.transpose(1, 2)))
@@ -193,6 +194,7 @@ class NMF:
 
             # Optimisations for the (common) beta=1 (KL) case.
             elif beta == 1:
+                print ("using generalised Kullback-Leibler updates")
                 ones = torch.ones(self._V.shape).type(self._tensor_type)
                 for self._iter in range(self.max_iterations):
                     ht = self.H.transpose(1, 2)
@@ -210,6 +212,7 @@ class NMF:
                         break
 
             else:
+                print ("using Itakura-Saito updates")
                 for self._iter in range(self.max_iterations):
                     self._H = self.H * ((self.W.transpose(1, 2) @ (((self.W @ self.H) ** (beta - 2)) * self._V)) /
                                        (self.W.transpose(1, 2) @ ((self.W @ self.H)**(beta-1))))
@@ -218,4 +221,3 @@ class NMF:
                     if stop_iterations()[0]:
                         self._conv=stop_iterations()[1]
                         break
-

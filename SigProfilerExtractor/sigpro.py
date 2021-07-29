@@ -127,6 +127,7 @@ def record_parameters(sysdata, excecution_parameters, start_time):
             sysdata.write("\tNMF_init: {}\n".format(excecution_parameters["NMF_init"]))
             sysdata.write("\tprecision: {}\n".format(excecution_parameters["precision"]))
             sysdata.write("\tmatrix_normalization: {}\n".format(excecution_parameters["matrix_normalization"]))
+            sysdata.write("\tbeta: {}\n".format(excecution_parameters["beta"])) # [AJC 2021-07-05] added new parameter
             sysdata.write("\tresample: {}\n".format(excecution_parameters["resample"]))
             sysdata.write("\tseeds: {}\n".format(excecution_parameters["seeds"]))
             sysdata.write("\tmin_NMF_iterations: {}\n".format(format(excecution_parameters["min_NMF_iterations"],',d')))
@@ -165,6 +166,7 @@ def record_parameters(sysdata, excecution_parameters, start_time):
 
 
 # [AJC 2021-07-05] added "section" and "nmf_replicate" parameters, for parallelisation
+# [AJC 2021-07-29] added "beta", to allow updates method to be specified
 def sigProfilerExtractor(input_type,
                          output,
                          input_data,
@@ -185,6 +187,7 @@ def sigProfilerExtractor(input_type,
                          nmf_init="random",
                          precision= "single",
                          matrix_normalization= "gmm",
+                         beta=2,
                          seeds= "random",
                          min_nmf_iterations= 10000,
                          max_nmf_iterations=1000000,
@@ -250,11 +253,13 @@ def sigProfilerExtractor(input_type,
 
     NMF RUNS:-
 
-    matrix_normalization: A string. Method of normalizing the genome matrix before it is analyzed by NMF. Other options are "gmm", "100X" or "no_normalization". Default is "gmm".
-
-    nmf_init: A String. The initialization algorithm for W and H matrix of NMF. Options are "random", "nndsvd", "nndsvda", "nndsvdar" and "nndsvd_min". Default is "random".
+    nmf_init: A string. The initialization algorithm for W and H matrix of NMF. Options are "random", "nndsvd", "nndsvda", "nndsvdar" and "nndsvd_min". Default is "random".
 
     precision: A string. Values should be single or double. Default is "single".
+
+    matrix_normalization: A string. Method of normalizing the genome matrix before it is analyzed by NMF. Other options are "gmm", "100X" or "no_normalization". Default is "gmm".
+
+    beta: An integer. Value defines whether (0) Itakura-Saito updates, (1) generalised Kullback-Leibler updates, or (2) Euclidean updates are used. Defualt is 2 (Euclidean updates).
 
     min_nmf_iterations: An integer. Value defines the minimum number of iterations to be completed before NMF converges. Default is 10000.
 
@@ -385,6 +390,7 @@ def sigProfilerExtractor(input_type,
         nmf_replicates = 1
 
     # [AJC 2021-07-05] added NMF_replicate to record which of the replicates is to be run (used for file naming)
+    # [AJC 2021-07-29] added beta so that it is based to NMF fitting
     excecution_parameters= {"input_type":input_type,
                         "output":output,
                         "input_data":input_data,
@@ -403,6 +409,7 @@ def sigProfilerExtractor(input_type,
                         "NMF_init":nmf_init,
                         "precision":precision,
                         "matrix_normalization":matrix_normalization,
+                        "beta":beta,
                         "resample":resample,
                         "seeds":seeds,
                         "min_NMF_iterations":min_nmf_iterations,
