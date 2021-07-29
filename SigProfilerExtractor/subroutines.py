@@ -2345,14 +2345,16 @@ def stabVsRError(csvfile, output, title, all_similarities_list, input_type="csvf
 
     plt.close()
 
-
-    #put * in the selected solution
-    index = data.index.astype(int)
-    index = list(index.astype(str))
-    solution = get_indeces(index, [str(alternative_solution)])[0]
-    index[solution] = index[solution]+"*"
-    data.index = index
-
+    # [AJC 2021-07-29] added error handling as alterative_solution can be outside range of signatures tested
+    try:
+        #put * in the selected solution
+        index = data.index.astype(int)
+        index = list(index.astype(str))
+        solution = get_indeces(index, [str(alternative_solution)])[0]
+        index[solution] = index[solution]+"*"
+        data.index = index
+    except:
+        pass
 
     # add % signs
     data.insert(1,'Considerable Solution', stable_solutions)
