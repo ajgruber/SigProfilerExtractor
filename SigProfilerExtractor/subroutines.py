@@ -1594,13 +1594,15 @@ def export_information(loopResults, mutation_context, output, index, colnames, s
     # get the mutational contexts
     #print ("The mutaion type is", mutation_type)
     m = mutation_context
-    if not (m=="DINUC"or m=="INDEL"):
-        mutation_type = "SBS"+m
-
+    # [AJC 2021-11-24] added "CNV"
+    if not (m=="DINUC" or m=="INDEL" or m=="CNV"):
+        mutation_type = "SBS" + m
     else:
         if m == "DINUC":
             mutation_type = "DBS78"
-        elif m== "INDEL":
+        elif m == "CNV":
+            mutation_type = "CNV48"
+        elif m == "INDEL":
             mutation_type = "ID83"
     # Create the neccessary directories
     subdirectory = output+"/All_Solutions/"+mutation_type+"_"+str(i)+"_Signatures"
